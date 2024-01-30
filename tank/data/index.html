@@ -5,27 +5,72 @@
 <script language="javascript" type="text/javascript">
 
 var url = "ws://192.168.4.1:1337/";
-var output;
-var button;
-var canvas;
-var context;
+//var output;
+var context1;
+var context2;
+var context3;
+var context4;
+//buttons and canvas
+var button1;
+var canvas1;
+var button2;
+var canvas2;
+var button3;
+var canvas3;
+var button4;
+var canvas4;
 
 // This is called when the page finishes loading
 function init() {
 
     // Assign page elements to variables
-    button = document.getElementById("toggleButton");
-    output = document.getElementById("output");
-    canvas = document.getElementById("led");
+    button1 = document.getElementById("toggleButton1");
+    button2 = document.getElementById("toggleButton2");
+    button3 = document.getElementById("toggleButton3");
+    button4 = document.getElementById("toggleButton4");
+	
+    //output = document.getElementById("output");
+    canvas1 = document.getElementById("led1");
+    canvas2 = document.getElementById("led2");
+    canvas3 = document.getElementById("led3");
+    canvas4 = document.getElementById("led4");
+	
     
     // Draw circle in canvas
-    context = canvas.getContext("2d");
-    context.arc(25, 25, 15, 0, Math.PI * 2, false);
-    context.lineWidth = 3;
-    context.strokeStyle = "black";
-    context.stroke();
-    context.fillStyle = "black";
-    context.fill();
+    context1 = canvas1.getContext("2d");
+    context1.arc(25, 25, 15, 0, Math.PI * 2, false);
+    context1.lineWidth = 3;
+    context1.strokeStyle = "black";
+    context1.stroke();
+    context1.fillStyle = "black";
+    context1.fill();
+	
+	// Draw circle in canvas
+    context2 = canvas2.getContext("2d");
+    context2.arc(25, 25, 15, 0, Math.PI * 2, false);
+    context2.lineWidth = 3;
+    context2.strokeStyle = "black";
+    context2.stroke();
+    context2.fillStyle = "black";
+    context2.fill();
+	
+	// Draw circle in canvas
+    context3 = canvas3.getContext("2d");
+    context3.arc(25, 25, 15, 0, Math.PI * 2, false);
+    context3.lineWidth = 3;
+    context3.strokeStyle = "black";
+    context3.stroke();
+    context3.fillStyle = "black";
+    context3.fill();
+	
+	// Draw circle in canvas
+    context4 = canvas4.getContext("2d");
+    context4.arc(25, 25, 15, 0, Math.PI * 2, false);
+    context4.lineWidth = 3;
+    context4.strokeStyle = "black";
+    context4.stroke();
+    context4.fillStyle = "black";
+    context4.fill();
     
     // Connect to WebSocket server
     wsConnect(url);
@@ -51,10 +96,18 @@ function onOpen(evt) {
     console.log("Connected");
     
     // Enable button
-    button.disabled = false;
+    button1.disabled = false;
+    button2.disabled = false;
+    button3.disabled = false;
+    button4.disabled = false;
+	
     
     // Get the current state of the LED
-    doSend("getLEDState");
+    doSend("getLEDState1");
+    doSend("getLEDState2");
+    doSend("getLEDState3");
+    doSend("getLEDState4");
+	
 }
 
 // Called when the WebSocket connection is closed
@@ -64,7 +117,11 @@ function onClose(evt) {
     console.log("Disconnected");
     
     // Disable button
-    button.disabled = true;
+    button1.disabled = true;
+    button2.disabled = true;
+    button3.disabled = true;
+    button4.disabled = true;
+	
     
     // Try to reconnect after a few seconds
     setTimeout(function() { wsConnect(url) }, 2000);
@@ -75,9 +132,39 @@ function onMessage(evt) {
 
     // Print out our received message
     console.log("Received: " + evt.data);
-    
+	
+	// Parse the message to get LED state and canvas identifier -->
+    const messageParts = evt.data.split(":");
+    if (messageParts.length !== 2) {
+        console.error("Invalid message format");
+        return;
+    }
+
+    const canvasId = messageParts[0];
+    const ledState = messageParts[1];
+
+    // Get the corresponding context based on canvas identifier
+    let context;
+    switch (canvasId) {
+        case "led1":
+            context = context1;
+            break;
+        case "led2":
+            context = context2;
+            break;
+        case "led3":
+            context = context3;
+            break;
+        case "led4":
+            context = context4;
+            break;
+        default:
+            console.error("Unknown canvas identifier: " + canvasId);
+            return;
+    }
+	
     // Update circle graphic with LED state
-    switch(evt.data) {
+    switch(ledState) {
         case "0":
             console.log("LED is off");
             context.fillStyle = "black";
@@ -105,9 +192,21 @@ function doSend(message) {
 }
 
 // Called whenever the HTML button is pressed
-function onPress() {
+function onPress1() {
     doSend("toggleLED1");
     doSend("getLEDState1");
+}
+function onPress2() {
+    doSend("toggleLED2");
+    doSend("getLEDState2");
+}
+function onPress3() {
+    doSend("toggleLED3");
+    doSend("getLEDState3");
+}
+function onPress4() {
+    doSend("toggleLED4");
+    doSend("getLEDState4");
 }
 
 // Call the init function as soon as the page loads
@@ -119,7 +218,19 @@ window.addEventListener("load", init, false);
 
 <table>
     <tr>
-        <td><button id="toggleButton" onclick="onPress()" disabled>Toggle LED</button></td>
-        <td><canvas id="led" width="50" height="50"></canvas></td>
+        <td><button id="toggleButton1" onclick="onPress1()" disabled>Toggle LED1</button></td>
+        <td><canvas id="led1" width="50" height="50"></canvas></td>
+    </tr>
+	<tr>
+        <td><button id="toggleButton2" onclick="onPress2()" disabled>Toggle LED2</button></td>
+        <td><canvas id="led2" width="50" height="50"></canvas></td>
+    </tr>
+	<tr>
+        <td><button id="toggleButton3" onclick="onPress3()" disabled>Toggle LED3</button></td>
+        <td><canvas id="led3" width="50" height="50"></canvas></td>
+    </tr>
+	<tr>
+        <td><button id="toggleButton4" onclick="onPress4()" disabled>Toggle LED4</button></td>
+        <td><canvas id="led4" width="50" height="50"></canvas></td>
     </tr>
 </table>

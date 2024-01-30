@@ -26,7 +26,10 @@ const int led_pin_white = D5;
 AsyncWebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(1337);
 char msg_buf[10];
-int led_state = 0;
+int led_state1 = 0;
+int led_state2 = 0;
+int led_state3 = 0;
+int led_state4 = 0;
 
 /***********************************************************
    Functions
@@ -61,15 +64,56 @@ void onWebSocketEvent(uint8_t client_num,
       // Print out raw message
       Serial.printf("[%u] Received text: %s\n", client_num, payload);
 
-      // Toggle LED
-      if (strcmp((char *)payload, "toggleLED1") == 0) {
-        led_state = led_state ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state);
-        digitalWrite(led_pin_orange, led_state);
 
-        // Report the state of the LED
+      //LED1
+      // Toggle LED1
+      if (strcmp((char *)payload, "toggleLED1") == 0) {
+        led_state1 = led_state1 ? 0 : 1;
+        Serial.printf("Toggling LED to %u\n", led_state1);
+        digitalWrite(led_pin_orange, led_state1);
+
+        // Report the state of the LED1
       } else if (strcmp((char *)payload, "getLEDState1") == 0) {
-        sprintf(msg_buf, "%d", led_state);
+        sprintf(msg_buf, "%s:%d", "led1",led_state1);
+        Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
+        webSocket.sendTXT(client_num, msg_buf);
+
+      //LED2
+      // Toggle LED2
+      } else if (strcmp((char *)payload, "toggleLED2") == 0) {
+        led_state2 = led_state2 ? 0 : 1;
+        Serial.printf("Toggling LED to %u\n", led_state2);
+        digitalWrite(led_pin_purple, led_state2);
+
+        // Report the state of the LED2
+      } else if (strcmp((char *)payload, "getLEDState2") == 0) {
+        sprintf(msg_buf, "%s:%d","led2",led_state2);
+        Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
+        webSocket.sendTXT(client_num, msg_buf);
+
+      //LED3
+      // Toggle LED3
+      } else if (strcmp((char *)payload, "toggleLED3") == 0) {
+        led_state3 = led_state3 ? 0 : 1;
+        Serial.printf("Toggling LED to %u\n", led_state3);
+        digitalWrite(led_pin_green, led_state3);
+
+        // Report the state of the LED3
+      } else if (strcmp((char *)payload, "getLEDState3") == 0) {
+        sprintf(msg_buf, "%s:%d","led3",led_state3);
+        Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
+        webSocket.sendTXT(client_num, msg_buf);
+
+      //LED4
+      // Toggle LED4
+      } else if (strcmp((char *)payload, "toggleLED4") == 0) {
+        led_state4 = led_state4 ? 0 : 1;
+        Serial.printf("Toggling LED to %u\n", led_state4);
+        digitalWrite(led_pin_white, led_state4);
+
+        // Report the state of the LED4
+      } else if (strcmp((char *)payload, "getLEDState4") == 0) {
+        sprintf(msg_buf, "%s:%d","led4",led_state4);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
         webSocket.sendTXT(client_num, msg_buf);
 
@@ -77,6 +121,7 @@ void onWebSocketEvent(uint8_t client_num,
       } else {
         Serial.println("[%u] Message not recognized");
       }
+      
       break;
 
     // For everything else: do nothing
@@ -117,9 +162,18 @@ void onPageNotFound(AsyncWebServerRequest *request) {
 */
 
 void setup() {
-  // Init LED and turn off
+  // Init LEDs and turn off
   pinMode(led_pin_orange, OUTPUT);
   digitalWrite(led_pin_orange, LOW);
+  
+  pinMode(led_pin_purple, OUTPUT);
+  digitalWrite(led_pin_purple, LOW);
+  
+  pinMode(led_pin_green, OUTPUT);
+  digitalWrite(led_pin_green, LOW);
+  
+  pinMode(led_pin_white, OUTPUT);
+  digitalWrite(led_pin_white, LOW);
 
   // Start Serial port
   Serial.begin(115200);
