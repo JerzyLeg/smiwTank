@@ -2,34 +2,34 @@
 #include <SPIFFS.h>
 #include <ESPAsyncWebServer.h>
 #include <WebSocketsServer.h>
-
-// Constants
-const char *msg_toggle_led1 = "toggleLED1";
-const char *msg_toggle_led2 = "toggleLED2";
-const char *msg_toggle_led3 = "toggleLED3";
-const char *msg_toggle_led4 = "toggleLED4";
-const char *msg_get_led1 = "getLEDState1";
-const char *msg_get_led2 = "getLEDState2";
-const char *msg_get_led3 = "getLEDState3";
-const char *msg_get_led4 = "getLEDState4";
+#include <ESP32MotorControl.h> // https://github.com/JoaoLopesF/ESP32MotorControl
 
 const int dns_port = 53;
 const int http_port = 80;
 const int ws_port = 1337;
-const int led_pin_orange = D2;
-const int led_pin_purple = D3;
-const int led_pin_green = D4;
-const int led_pin_white = D5;
+
+const int motor0GPIO2 = 2;
+const int motor0GPIO3 = 3;
+const int motor1GPIO4 = 4;
+const int motor1GPIO5 = 5;
+
+const int speed = 50;
+const int RSpeed = 75;
+const int LSpeed = 100;
+
+int motor0Backward = 0;
+int motor0Forward = 0;
+int motor1Backward = 0;
+int motor1Forward = 0;
+
+// MotorControl instance
+ESP32MotorControl MotorControl = ESP32MotorControl();
 
 
 // Globals
 AsyncWebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(1337);
-char msg_buf[10];
-int led_state1 = 0;
-int led_state2 = 0;
-int led_state3 = 0;
-int led_state4 = 0;
+char msg_buf[20];
 
 /***********************************************************
    Functions
@@ -65,55 +65,88 @@ void onWebSocketEvent(uint8_t client_num,
       Serial.printf("[%u] Received text: %s\n", client_num, payload);
 
 
-      //LED1
-      // Toggle LED1
-      if (strcmp((char *)payload, "toggleLED1") == 0) {
-        led_state1 = led_state1 ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state1);
-        digitalWrite(led_pin_orange, led_state1);
+      //Motor_0 FORWARD
+      // Toggle forward
+      if (strcmp((char *)payload, "moveForwardMotor0") == 0) {
+        motor0Forward = motor0Forward ? 0 : 1;
+        Serial.printf("Motor_0: Forward %u\n", motor0Forward);
+        if(motor0Forward == 1)
+        {
+          motor0Backward = 0;
+          MotorControl.motorForward(0, LSpeed);
+        }
+        else
+        {
+          MotorControl.motorStop(0);
+        }
 
-        // Report the state of the LED1
-      } else if (strcmp((char *)payload, "getLEDState1") == 0) {
-        sprintf(msg_buf, "%s:%d", "led1",led_state1);
+        
+        // Report the state of the Motor_0 FORWARD
+      } else if (strcmp((char *)payload, "stateForwardMotor0") == 0) {
+        sprintf(msg_buf, "%s:%d", "motor0forward",motor0Forward);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
         webSocket.sendTXT(client_num, msg_buf);
 
-      //LED2
-      // Toggle LED2
-      } else if (strcmp((char *)payload, "toggleLED2") == 0) {
-        led_state2 = led_state2 ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state2);
-        digitalWrite(led_pin_purple, led_state2);
+      //Motor_0 BACKWARD
+      // Toggle backward
+      } else if (strcmp((char *)payload, "moveBackwardMotor0") == 0) {
+        motor0Backward = motor0Backward ? 0 : 1;
+        Serial.printf("Motor_0: Backward %u\n", motor0Backward);
+        if(motor0Backward == 1)
+        {
+          motor0Forward = 0;
+          MotorControl.motorReverse(0, LSpeed);
+        }
+        else
+        {
+          MotorControl.motorStop(0);
+        }
 
         // Report the state of the LED2
-      } else if (strcmp((char *)payload, "getLEDState2") == 0) {
-        sprintf(msg_buf, "%s:%d","led2",led_state2);
+      } else if (strcmp((char *)payload, "stateBackwardMotor0") == 0) {
+        sprintf(msg_buf, "%s:%d","motor0backward",motor0Backward);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
         webSocket.sendTXT(client_num, msg_buf);
 
-      //LED3
-      // Toggle LED3
-      } else if (strcmp((char *)payload, "toggleLED3") == 0) {
-        led_state3 = led_state3 ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state3);
-        digitalWrite(led_pin_green, led_state3);
+      //Motor_1 FORWARD
+      // Toggle forward
+      } else if (strcmp((char *)payload, "moveForwardMotor1") == 0) {
+        motor1Forward = motor1Forward ? 0 : 1;
+        Serial.printf("Motor_1: Forward %u\n", motor1Forward);
+        if(motor1Forward == 1)
+        {
+          motor1Backward = 0;
+          MotorControl.motorForward(1, RSpeed);
+        }
+        else
+        {
+          MotorControl.motorStop(1);
+        }
 
         // Report the state of the LED3
-      } else if (strcmp((char *)payload, "getLEDState3") == 0) {
-        sprintf(msg_buf, "%s:%d","led3",led_state3);
+      } else if (strcmp((char *)payload, "stateForwardMotor1") == 0) {
+        sprintf(msg_buf, "%s:%d","motor1forward",motor1Forward);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
         webSocket.sendTXT(client_num, msg_buf);
 
-      //LED4
-      // Toggle LED4
-      } else if (strcmp((char *)payload, "toggleLED4") == 0) {
-        led_state4 = led_state4 ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state4);
-        digitalWrite(led_pin_white, led_state4);
+      //Motor_1 BACKWARD
+      // Toggle backward
+      } else if (strcmp((char *)payload, "moveBackwardMotor1") == 0) {
+        motor1Backward = motor1Backward ? 0 : 1;
+        Serial.printf("Motor_1: Backward %u\n", motor1Backward);
+        if(motor1Backward == 1)
+        {
+          motor1Forward = 0;
+          MotorControl.motorReverse(1, RSpeed);
+        }
+        else
+        {
+          MotorControl.motorStop(1);
+        }
 
         // Report the state of the LED4
-      } else if (strcmp((char *)payload, "getLEDState4") == 0) {
-        sprintf(msg_buf, "%s:%d","led4",led_state4);
+      } else if (strcmp((char *)payload, "stateBackwardMotor1") == 0) {
+        sprintf(msg_buf, "%s:%d","motor1backward",motor1Backward);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
         webSocket.sendTXT(client_num, msg_buf);
 
@@ -162,18 +195,15 @@ void onPageNotFound(AsyncWebServerRequest *request) {
 */
 
 void setup() {
-  // Init LEDs and turn off
-  pinMode(led_pin_orange, OUTPUT);
-  digitalWrite(led_pin_orange, LOW);
   
-  pinMode(led_pin_purple, OUTPUT);
-  digitalWrite(led_pin_purple, LOW);
+  //Setup pins as an output
+  pinMode(motor0GPIO2, OUTPUT);
+  pinMode(motor0GPIO3, OUTPUT);
+  pinMode(motor1GPIO4, OUTPUT);
+  pinMode(motor1GPIO5, OUTPUT);
   
-  pinMode(led_pin_green, OUTPUT);
-  digitalWrite(led_pin_green, LOW);
-  
-  pinMode(led_pin_white, OUTPUT);
-  digitalWrite(led_pin_white, LOW);
+  //Attach 2 motors
+  MotorControl.attachMotors(motor0GPIO2, motor0GPIO3, motor1GPIO4, motor1GPIO5);
 
   // Start Serial port
   Serial.begin(115200);

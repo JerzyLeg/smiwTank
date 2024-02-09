@@ -30,10 +30,10 @@ function init() {
     button4 = document.getElementById("toggleButton4");
 	
     //output = document.getElementById("output");
-    canvas1 = document.getElementById("led1");
-    canvas2 = document.getElementById("led2");
-    canvas3 = document.getElementById("led3");
-    canvas4 = document.getElementById("led4");
+    canvas1 = document.getElementById("sign1");
+    canvas2 = document.getElementById("sign2");
+    canvas3 = document.getElementById("sign3");
+    canvas4 = document.getElementById("sign4");
 	
     
     // Draw circle in canvas
@@ -103,10 +103,10 @@ function onOpen(evt) {
 	
     
     // Get the current state of the LED
-    doSend("getLEDState1");
-    doSend("getLEDState2");
-    doSend("getLEDState3");
-    doSend("getLEDState4");
+    doSend("stateForwardMotor0");
+    doSend("stateBackwardMotor0");
+    doSend("stateForwardMotor1");
+    doSend("stateBackwardMotor1");
 	
 }
 
@@ -133,7 +133,7 @@ function onMessage(evt) {
     // Print out our received message
     console.log("Received: " + evt.data);
 	
-	// Parse the message to get LED state and canvas identifier -->
+	// Parse the message to get motor01forwardbackward state and canvas identifier -->
     const messageParts = evt.data.split(":");
     if (messageParts.length !== 2) {
         console.error("Invalid message format");
@@ -141,21 +141,21 @@ function onMessage(evt) {
     }
 
     const canvasId = messageParts[0];
-    const ledState = messageParts[1];
+    const motorState = messageParts[1];
 
     // Get the corresponding context based on canvas identifier
     let context;
     switch (canvasId) {
-        case "led1":
+        case "motor0forward":
             context = context1;
             break;
-        case "led2":
+        case "motor0backward":
             context = context2;
             break;
-        case "led3":
+        case "motor1forward":
             context = context3;
             break;
-        case "led4":
+        case "motor1backward":
             context = context4;
             break;
         default:
@@ -163,15 +163,15 @@ function onMessage(evt) {
             return;
     }
 	
-    // Update circle graphic with LED state
-    switch(ledState) {
+    // Update circle graphic with motor state
+    switch(motorState) {
         case "0":
-            console.log("LED is off");
+            console.log("Motor is off");
             context.fillStyle = "black";
             context.fill();
             break;
         case "1":
-            console.log("LED is on");
+            console.log("Motor is on");
             context.fillStyle = "red";
             context.fill();
             break;
@@ -193,20 +193,25 @@ function doSend(message) {
 
 // Called whenever the HTML button is pressed
 function onPress1() {
-    doSend("toggleLED1");
-    doSend("getLEDState1");
+    doSend("moveForwardMotor0");
+    doSend("stateForwardMotor0");
+    doSend("stateBackwardMotor0");
 }
 function onPress2() {
-    doSend("toggleLED2");
-    doSend("getLEDState2");
+    doSend("moveBackwardMotor0");
+    doSend("stateBackwardMotor0");
+    doSend("stateForwardMotor0");
+	
 }
 function onPress3() {
-    doSend("toggleLED3");
-    doSend("getLEDState3");
+    doSend("moveForwardMotor1");
+    doSend("stateForwardMotor1");
+    doSend("stateBackwardMotor1");
 }
 function onPress4() {
-    doSend("toggleLED4");
-    doSend("getLEDState4");
+    doSend("moveBackwardMotor1");
+    doSend("stateBackwardMotor1");
+    doSend("stateForwardMotor1");
 }
 
 // Call the init function as soon as the page loads
@@ -214,23 +219,19 @@ window.addEventListener("load", init, false);
 
 </script>
 
-<h2>LED Control</h2>
+<h2>MOTOR Control</h2>
 
 <table>
     <tr>
-        <td><button id="toggleButton1" onclick="onPress1()" disabled>Toggle LED1</button></td>
-        <td><canvas id="led1" width="50" height="50"></canvas></td>
+        <td><button id="toggleButton1" onclick="onPress1()" disabled>FORWARD LEFT</button></td>
+        <td><canvas id="sign1" width="50" height="50"></canvas></td>
+		<td><canvas id="sign3" width="50" height="50"></canvas></td>
+		<td><button id="toggleButton3" onclick="onPress3()" disabled>FORWARD RIGHT</button></td>
     </tr>
 	<tr>
-        <td><button id="toggleButton2" onclick="onPress2()" disabled>Toggle LED2</button></td>
-        <td><canvas id="led2" width="50" height="50"></canvas></td>
-    </tr>
-	<tr>
-        <td><button id="toggleButton3" onclick="onPress3()" disabled>Toggle LED3</button></td>
-        <td><canvas id="led3" width="50" height="50"></canvas></td>
-    </tr>
-	<tr>
-        <td><button id="toggleButton4" onclick="onPress4()" disabled>Toggle LED4</button></td>
-        <td><canvas id="led4" width="50" height="50"></canvas></td>
+        <td><button id="toggleButton2" onclick="onPress2()" disabled>BACKWARD LEFT</button></td>
+        <td><canvas id="sign2" width="50" height="50"></canvas></td>
+		<td><canvas id="sign4" width="50" height="50"></canvas></td>
+		<td><button id="toggleButton4" onclick="onPress4()" disabled>BACKWARD RIGHT</button></td>
     </tr>
 </table>
