@@ -2,11 +2,7 @@ This is software which is used to control XIAO ESP32S3 with small battery, drive
 The web server is hosted on ESP32, the wbesite with control panel is uploaded to memory of ESP32. With this, I am able to control two motors in two directions by web app.
 To use it, device must be powered up by battery or usb-c, you have to connect to Wi-Fi of esp32 and go to 192.168.4.1. There is control panel for motors.
 
-Soldering:
-Battery 3,7V       XIAO ESP32S3      DRV8833          2x DC-MOTORS 3,7V      
---------------------GPIO2            IN4  OUT1            -
-                    GPIO3            IN3  OUT2            +
-                    GPIO4            IN2  OUT3            +
-                    GPIO5            IN1  OUT4            -
-  +                   BAT+              VCC
-  -                   BAT-              GND
+##HARDWARE CONNECTION:
+XIAO ESP32S3 pinouts: GPIO2, GPIO3, GPIO4, GPIO5 to DRV8833: IN4, IN3, IN2, IN1. 
+DRV8833: OUT1, OUT2, Out3, OUT4 to MOTOR1: -, + MOTOR2: +, -. 
+External 3,7V battery +, - to both ESP32S3: BAT+, BAT- and DRV8833: VCC, GND.
