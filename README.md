@@ -4,7 +4,7 @@ To use it, device must be powered up by battery or usb-c, you have to connect to
 
 Soldering:
 Battery 3,7V       XIAO ESP32S3      DRV8833          2x DC-MOTORS 3,7V      
-                    GPIO2            IN4  OUT1            -
+--------------------GPIO2            IN4  OUT1            -
                     GPIO3            IN3  OUT2            +
                     GPIO4            IN2  OUT3            +
                     GPIO5            IN1  OUT4            -
