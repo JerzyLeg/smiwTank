@@ -1,4 +1,4 @@
-This is software which enables steering the tank by controlling tow DC-motors using XIAO ESP32S3 with small battery and driver drv8833.<br />
+This is software which enables steering the tank by controlling two DC-motors using XIAO ESP32S3 with small battery and driver drv8833.<br />
 The web server is hosted on XIAO ESP32S3, the website with control panel is uploaded to memory of ESP32. With this, I am able to control two motors in two directions by web app.
 To use it, device must be powered up by battery or usb-c, you have to connect to Wi-Fi of esp32 and go to 192.168.4.1. There is control panel for motors.<br />
 
