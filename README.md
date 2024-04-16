@@ -6,9 +6,8 @@ XIAO ESP32S3 pinouts: GPIO2, GPIO3, GPIO4, GPIO5 to DRV8833: IN4, IN3, IN2, IN1.
 DRV8833: OUT1, OUT2, Out3, OUT4 to MOTOR1: -, + MOTOR2: +, -. <br />
 External 3,7V battery +, - to both ESP32S3: BAT+, BAT- and DRV8833: VCC, GND.<br />
 
-Idea: https://www.instructables.com/Camera-NanoTank/<br />
-Web Server Connection based on: https://shawnhymel.com/1882/how-to-create-a-web-server-with-websockets-using-an-esp32-in-arduino/<br />
+Inspired by: https://www.instructables.com/Camera-NanoTank/<br />
 Controlling motors with DRV8833 using library: https://github.com/JoaoLopesF/ESP32MotorControl <br />
 
-Demonstration:<br />
+My demonstration movie: <br />
 https://youtu.be/do-1lVbuCjg<br />
