@@ -3,39 +3,36 @@
 <title>WebSocket Test</title>
 
 <script language="javascript" type="text/javascript">
+  var url = "ws://192.168.4.1:1337/";
+  //var output;
+  var context1;
+  var context2;
+  var context3;
+  var context4;
+  //buttons and canvas
+  var button1;
+  var canvas1;
+  var button2;
+  var canvas2;
+  var button3;
+  var canvas3;
+  var button4;
+  var canvas4;
 
-var url = "ws://192.168.4.1:1337/";
-//var output;
-var context1;
-var context2;
-var context3;
-var context4;
-//buttons and canvas
-var button1;
-var canvas1;
-var button2;
-var canvas2;
-var button3;
-var canvas3;
-var button4;
-var canvas4;
-
-// This is called when the page finishes loading
-function init() {
-
+  // This is called when the page finishes loading
+  function init() {
     // Assign page elements to variables
     button1 = document.getElementById("toggleButton1");
     button2 = document.getElementById("toggleButton2");
     button3 = document.getElementById("toggleButton3");
     button4 = document.getElementById("toggleButton4");
-	
+
     //output = document.getElementById("output");
     canvas1 = document.getElementById("sign1");
     canvas2 = document.getElementById("sign2");
     canvas3 = document.getElementById("sign3");
     canvas4 = document.getElementById("sign4");
-	
-    
+
     // Draw circle in canvas
     context1 = canvas1.getContext("2d");
     context1.arc(25, 25, 15, 0, Math.PI * 2, false);
@@ -44,8 +41,8 @@ function init() {
     context1.stroke();
     context1.fillStyle = "black";
     context1.fill();
-	
-	// Draw circle in canvas
+
+    // Draw circle in canvas
     context2 = canvas2.getContext("2d");
     context2.arc(25, 25, 15, 0, Math.PI * 2, false);
     context2.lineWidth = 3;
@@ -53,8 +50,8 @@ function init() {
     context2.stroke();
     context2.fillStyle = "black";
     context2.fill();
-	
-	// Draw circle in canvas
+
+    // Draw circle in canvas
     context3 = canvas3.getContext("2d");
     context3.arc(25, 25, 15, 0, Math.PI * 2, false);
     context3.lineWidth = 3;
@@ -62,8 +59,8 @@ function init() {
     context3.stroke();
     context3.fillStyle = "black";
     context3.fill();
-	
-	// Draw circle in canvas
+
+    // Draw circle in canvas
     context4 = canvas4.getContext("2d");
     context4.arc(25, 25, 15, 0, Math.PI * 2, false);
     context4.lineWidth = 3;
@@ -71,73 +68,76 @@ function init() {
     context4.stroke();
     context4.fillStyle = "black";
     context4.fill();
-    
+
     // Connect to WebSocket server
     wsConnect(url);
-}
+  }
 
-// Call this to connect to the WebSocket server
-function wsConnect(url) {
-    
+  // Call this to connect to the WebSocket server
+  function wsConnect(url) {
     // Connect to WebSocket server
     websocket = new WebSocket(url);
-    
+
     // Assign callbacks
-    websocket.onopen = function(evt) { onOpen(evt) };
-    websocket.onclose = function(evt) { onClose(evt) };
-    websocket.onmessage = function(evt) { onMessage(evt) };
-    websocket.onerror = function(evt) { onError(evt) };
-}
+    websocket.onopen = function (evt) {
+      onOpen(evt);
+    };
+    websocket.onclose = function (evt) {
+      onClose(evt);
+    };
+    websocket.onmessage = function (evt) {
+      onMessage(evt);
+    };
+    websocket.onerror = function (evt) {
+      onError(evt);
+    };
+  }
 
-// Called when a WebSocket connection is established with the server
-function onOpen(evt) {
-
+  // Called when a WebSocket connection is established with the server
+  function onOpen(evt) {
     // Log connection state
     console.log("Connected");
-    
+
     // Enable button
     button1.disabled = false;
     button2.disabled = false;
     button3.disabled = false;
     button4.disabled = false;
-	
-    
+
     // Get the current state of the LED
     doSend("stateForwardMotor0");
     doSend("stateBackwardMotor0");
     doSend("stateForwardMotor1");
     doSend("stateBackwardMotor1");
-	
-}
+  }
 
-// Called when the WebSocket connection is closed
-function onClose(evt) {
-
+  // Called when the WebSocket connection is closed
+  function onClose(evt) {
     // Log disconnection state
     console.log("Disconnected");
-    
+
     // Disable button
     button1.disabled = true;
     button2.disabled = true;
     button3.disabled = true;
     button4.disabled = true;
-	
-    
+
     // Try to reconnect after a few seconds
-    setTimeout(function() { wsConnect(url) }, 2000);
-}
+    setTimeout(function () {
+      wsConnect(url);
+    }, 2000);
+  }
 
-// Called when a message is received from the server
-function onMessage(evt) {
-
+  // Called when a message is received from the server
+  function onMessage(evt) {
     // Print out our received message
     console.log("Received: " + evt.data);
-	
-	// Parse the message to get motor01forwardbackward state and canvas identifier -->
+
+    // Parse the message to get motor01forwardbackward state and canvas identifier -->
     const messageParts = evt.data.split(":");
     if (messageParts.length !== 2) {
-        console.error("Invalid message format");
-        return;
+      console.error("Invalid message format");
+      return;
     }
 
     const canvasId = messageParts[0];
@@ -146,92 +146,110 @@ function onMessage(evt) {
     // Get the corresponding context based on canvas identifier
     let context;
     switch (canvasId) {
-        case "motor0forward":
-            context = context1;
-            break;
-        case "motor0backward":
-            context = context2;
-            break;
-        case "motor1forward":
-            context = context3;
-            break;
-        case "motor1backward":
-            context = context4;
-            break;
-        default:
-            console.error("Unknown canvas identifier: " + canvasId);
-            return;
+      case "motor0forward":
+        context = context1;
+        break;
+      case "motor0backward":
+        context = context2;
+        break;
+      case "motor1forward":
+        context = context3;
+        break;
+      case "motor1backward":
+        context = context4;
+        break;
+      default:
+        console.error("Unknown canvas identifier: " + canvasId);
+        return;
     }
-	
+
     // Update circle graphic with motor state
-    switch(motorState) {
-        case "0":
-            console.log("Motor is off");
-            context.fillStyle = "black";
-            context.fill();
-            break;
-        case "1":
-            console.log("Motor is on");
-            context.fillStyle = "red";
-            context.fill();
-            break;
-        default:
-            break;
+    switch (motorState) {
+      case "0":
+        console.log("Motor is off");
+        context.fillStyle = "black";
+        context.fill();
+        break;
+      case "1":
+        console.log("Motor is on");
+        context.fillStyle = "red";
+        context.fill();
+        break;
+      default:
+        break;
     }
-}
+  }
 
-// Called when a WebSocket error occurs
-function onError(evt) {
+  // Called when a WebSocket error occurs
+  function onError(evt) {
     console.log("ERROR: " + evt.data);
-}
+  }
 
-// Sends a message to the server (and prints it to the console)
-function doSend(message) {
+  // Sends a message to the server (and prints it to the console)
+  function doSend(message) {
     console.log("Sending: " + message);
     websocket.send(message);
-}
+  }
 
-// Called whenever the HTML button is pressed
-function onPress1() {
+  // Called whenever the HTML button is pressed
+  function onPress1() {
     doSend("moveForwardMotor0");
     doSend("stateForwardMotor0");
     doSend("stateBackwardMotor0");
-}
-function onPress2() {
+  }
+  function onPress2() {
     doSend("moveBackwardMotor0");
     doSend("stateBackwardMotor0");
     doSend("stateForwardMotor0");
-	
-}
-function onPress3() {
+  }
+  function onPress3() {
     doSend("moveForwardMotor1");
     doSend("stateForwardMotor1");
     doSend("stateBackwardMotor1");
-}
-function onPress4() {
+  }
+  function onPress4() {
     doSend("moveBackwardMotor1");
     doSend("stateBackwardMotor1");
     doSend("stateForwardMotor1");
-}
+  }
 
-// Call the init function as soon as the page loads
-window.addEventListener("load", init, false);
-
+  // Call the init function as soon as the page loads
+  window.addEventListener("load", init, false);
 </script>
 
 <h2>MOTOR Control</h2>
 
 <table>
-    <tr>
-        <td><button id="toggleButton1" onclick="onPress1()" disabled>FORWARD LEFT</button></td>
-        <td><canvas id="sign1" width="50" height="50"></canvas></td>
-		<td><canvas id="sign3" width="50" height="50"></canvas></td>
-		<td><button id="toggleButton3" onclick="onPress3()" disabled>FORWARD RIGHT</button></td>
-    </tr>
-	<tr>
-        <td><button id="toggleButton2" onclick="onPress2()" disabled>BACKWARD LEFT</button></td>
-        <td><canvas id="sign2" width="50" height="50"></canvas></td>
-		<td><canvas id="sign4" width="50" height="50"></canvas></td>
-		<td><button id="toggleButton4" onclick="onPress4()" disabled>BACKWARD RIGHT</button></td>
-    </tr>
+  <tr>
+    <td>
+      <button id="toggleButton1" onclick="onPress1()" disabled>
+        FORWARD LEFT
+      </button>
+    </td>
+    <td><canvas id="sign1" width="50" height="50"></canvas></td>
+    <td><canvas id="sign3" width="50" height="50"></canvas></td>
+    <td>
+      <button id="toggleButton3" onclick="onPress3()" disabled>
+        FORWARD RIGHT
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <button id="toggleButton2" onclick="onPress2()" disabled>
+        BACKWARD LEFT
+      </button>
+    </td>
+    <td><canvas id="sign2" width="50" height="50"></canvas></td>
+    <td><canvas id="sign4" width="50" height="50"></canvas></td>
+    <td>
+      <button id="toggleButton4" onclick="onPress4()" disabled>
+        BACKWARD RIGHT
+      </button>
+    </td>
+  </tr>
 </table>
+
+<h2>Live Stream</h2>
+<!-- MJPEG stream -->
+<img src="http://192.168.4.1/stream" style="width: 160px; height: 120px" />
