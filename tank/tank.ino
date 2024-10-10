@@ -621,12 +621,12 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   //config.xclk_freq_hz = 10000000;
   config.xclk_freq_hz = 8000000;
-  config.frame_size = FRAMESIZE_QQVGA;
+  config.frame_size = FRAMESIZE_QVGA;
   config.pixel_format = PIXFORMAT_JPEG; // for streaming
   config.grab_mode = CAMERA_GRAB_LATEST;
   config.fb_location = CAMERA_FB_IN_PSRAM;
-  //config.jpeg_quality = 10;
-  config.jpeg_quality = 20;
+  config.jpeg_quality = 10;
+  //config.jpeg_quality = 20;
   //config.fb_count = 2;
   config.fb_count = 1;
 

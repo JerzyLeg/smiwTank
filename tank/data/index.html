@@ -1,6 +1,10 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
-<title>WebSocket Test</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tank Controller</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
 
 <script language="javascript" type="text/javascript">
   var url = "ws://192.168.4.1:1337/";
@@ -172,7 +176,7 @@
         break;
       case "1":
         console.log("Motor is on");
-        context.fillStyle = "red";
+        context.fillStyle = "lime";
         context.fill();
         break;
       default:
@@ -217,39 +221,45 @@
   window.addEventListener("load", init, false);
 </script>
 
-<h2>MOTOR Control</h2>
+<body>
+  <!-- MJPEG stream -->
+  <div class="stream-container">
+    <img src="http://192.168.4.1/stream" />
+  </div>
 
-<table>
-  <tr>
-    <td>
-      <button id="toggleButton1" onclick="onPress1()" disabled>
-        FORWARD LEFT
-      </button>
-    </td>
-    <td><canvas id="sign1" width="50" height="50"></canvas></td>
-    <td><canvas id="sign3" width="50" height="50"></canvas></td>
-    <td>
-      <button id="toggleButton3" onclick="onPress3()" disabled>
-        FORWARD RIGHT
-      </button>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <button id="toggleButton2" onclick="onPress2()" disabled>
-        BACKWARD LEFT
-      </button>
-    </td>
-    <td><canvas id="sign2" width="50" height="50"></canvas></td>
-    <td><canvas id="sign4" width="50" height="50"></canvas></td>
-    <td>
-      <button id="toggleButton4" onclick="onPress4()" disabled>
-        BACKWARD RIGHT
-      </button>
-    </td>
-  </tr>
-</table>
+  <!-- Motor Control -->
+  <div class="control-container">
+    <table>
+      <tr>
+        <td>
+          <button id="toggleButton1" onclick="onPress1()" disabled>
+            FORWARD LEFT
+          </button>
+        </td>
+        <td><canvas id="sign1" width="50" height="50"></canvas></td>
+        <td><canvas id="sign3" width="50" height="50"></canvas></td>
+        <td>
+          <button id="toggleButton3" onclick="onPress3()" disabled>
+            FORWARD RIGHT
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button id="toggleButton2" onclick="onPress2()" disabled>
+            BACKWARD LEFT
+          </button>
+        </td>
+        <td><canvas id="sign2" width="50" height="50"></canvas></td>
+        <td><canvas id="sign4" width="50" height="50"></canvas></td>
+        <td>
+          <button id="toggleButton4" onclick="onPress4()" disabled>
+            BACKWARD RIGHT
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
 
-<h2>Live Stream</h2>
-<!-- MJPEG stream -->
-<img src="http://192.168.4.1/stream" style="width: 160px; height: 120px" />
+</html>
