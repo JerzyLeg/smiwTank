@@ -31,17 +31,20 @@ The web server is hosted on the XIAO ESP32S3 and the website is uploaded to it's
 7. Open a browser and navigate to provided address to access the website.
 
 ## Inspiration
-Idea, 3D printed parts and hardware based on this Instructables guide:<br> 
+Idea, 3D printed parts and hardware based on this Instructables guide:\
 https://www.instructables.com/Camera-NanoTank/
 
 ## Motor Control
-Controlled using the ESP32MotorControl library: <br>
+Controlled using the ESP32MotorControl library:\
 https://github.com/JoaoLopesF/ESP32MotorControl
 ## WebSocket Server
-Web socket server based on this article: <br>
+Web socket server based on this article:\
 https://shawnhymel.com/1882/how-to-create-a-web-server-with-websockets-using-an-esp32-in-arduino/ 
+## Camera stream on  AsyncWebServer
+Streaming live footage based on:\
+https://gist.github.com/me-no-dev/d34fba51a8f059ac559bf62002e61aa3 
 
 ## Demonstration Video
-Watch the demo on YouTube (tank was not streaming video yet): <br>
+Watch the demo on YouTube (tank was not streaming video yet):\
 https://youtu.be/do-1lVbuCjg
 
