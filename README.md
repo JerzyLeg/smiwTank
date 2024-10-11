@@ -2,7 +2,7 @@
 
 ## Description
 
-Still in progress...\ 
+Still in progress...<br>
 Software that enables to control two DC motors and capture live stream from attached camera.
 
 The web server is hosted on the XIAO ESP32S3 and the website is uploaded to it's memory with the help of SPIFFS. With this setup, you can control two motors in both directions and watch live camera stream through a web app.
