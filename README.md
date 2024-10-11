@@ -1,13 +1,47 @@
-This is software which enables steering the tank by controlling two DC-motors using XIAO ESP32S3 with small battery and driver drv8833.<br />
-The web server is hosted on XIAO ESP32S3, the website with control panel is uploaded to memory of ESP32. With this, I am able to control two motors in two directions by web app.
-To use it, device must be powered up by battery or usb-c, you have to connect to Wi-Fi of esp32 and go to 192.168.4.1. There is control panel for motors.<br />
+# NanoTank Seeed Studio XIAO  ESP32S3
 
-XIAO ESP32S3 pinouts: GPIO2, GPIO3, GPIO4, GPIO5 to DRV8833: IN4, IN3, IN2, IN1. <br />
-DRV8833: OUT1, OUT2, Out3, OUT4 to MOTOR1: -, + MOTOR2: +, -. <br />
-External 3,7V battery +, - to both ESP32S3: BAT+, BAT- and DRV8833: VCC, GND.<br />
+## Description
 
-Inspired by: https://www.instructables.com/Camera-NanoTank/<br />
-Controlling motors with DRV8833 using library: https://github.com/JoaoLopesF/ESP32MotorControl <br />
+Still in progress... 
+Software that enables to control two DC motors and capture live stream from attached camera.
 
-My demonstration movie: <br />
-https://youtu.be/do-1lVbuCjg<br />
+The web server is hosted on the XIAO ESP32S3 and the website is uploaded to it's memory with the help of SPIFFS. With this setup, you can control two motors in both directions and watch live camera stream through a web app.
+
+## Pinout Connections
+- XIAO ESP32S3 Pins:
+  - GPIO2, GPIO3, GPIO4, GPIO5 to DRV8833: IN4, IN3, IN2, IN1
+- DRV8833 Pins:
+  - OUT1, OUT2, OUT3, OUT4 to MOTOR1 (-, +) and MOTOR2 (+, -)
+- Power Connections:
+  - External 3.7V battery + and - connected to both:
+    - ESP32S3: BAT+ and BAT-
+    - DRV8833: VCC and GND
+- Camera module OV2640 connector:
+	 - B2B connector on the XIAO ESP32S3
+- Antenna Wi-Fi:
+	- WiFi/BT Antenna Connector on the XIAO ESP32S3  
+## How to Use
+
+1. Download all necessary libraries and tools:
+	 - everything that is shown in WebSocket Server article and ESP32MotorControl library.
+3. In Arduino IDE (only works on version 1.x.x), upload the code to XIAO ESP32S3.
+4. By clicking ESP32 Sketch Data Upload, upload your data folder (index.html and style.css) (choose SPIFFS).
+5. In serial monitor you should get IP address, to which you need to go.
+6. Connect to the ESP32's Wi-Fi.
+7. Open a browser and navigate to provided address to access the website.
+
+## Inspiration
+Idea, 3D printed parts and hardware based on this Instructables guide: 
+https://www.instructables.com/Camera-NanoTank/
+
+## Motor Control
+Controlled using the ESP32MotorControl library: 
+https://github.com/JoaoLopesF/ESP32MotorControl
+## WebSocket Server
+Web socket server based on this article: 
+https://shawnhymel.com/1882/how-to-create-a-web-server-with-websockets-using-an-esp32-in-arduino/ 
+
+## Demonstration Video
+Watch the demo on YouTube (tank was not streaming video yet): 
+https://youtu.be/do-1lVbuCjg
+
