@@ -24,11 +24,12 @@ The web server is hosted on the XIAO ESP32S3 and the website is uploaded to it's
 
 1. Download all necessary libraries and tools:
 	 - everything that is shown in WebSocket Server article and ESP32MotorControl library.
-3. In Arduino IDE (only works on version 1.x.x), upload the code to XIAO ESP32S3.
-4. By clicking ESP32 Sketch Data Upload, upload your data folder (index.html and style.css) (choose SPIFFS).
-5. In serial monitor you should get IP address, to which you need to go.
-6. Connect to the ESP32's Wi-Fi.
-7. Open a browser and navigate to provided address to access the website.
+3. Provide the name (ssid) and password to Wi-Fi you are connected. For example, you can run this on your mobile hotspot, in the code - type name and password.
+4. In Arduino IDE upload the code to XIAO ESP32S3.
+5. By clicking ESP32 Sketch Data Upload (only works on version 1.x.x), upload your data folder (index.html and style.css) (choose SPIFFS).
+6. In serial monitor you should get IP address, to which you need to go.
+7. Make sure your device (phone/pc) is connected to Wi-Fi, which ssid and password is provided in code.
+8. Open a browser and navigate to provided address to access the website.
 
 ## Inspiration
 Idea, 3D printed parts and hardware based on this Instructables guide:\
